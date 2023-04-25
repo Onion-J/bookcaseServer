@@ -78,7 +78,9 @@ func Start() {
 	// 创建学生账户
 	s.POST("/createStudentAccount", api.CreateStudentAccount)
 	// 查询学生账户
-	s.POST("/selectStudent", api.SelectStudent)
+	s.POST("/selectStudentAccount", api.SelectStudentAccount)
+	// 删除学生账户
+	s.POST("/deleteStudentAccount", api.DeleteStudentAccount)
 
 	// Web路由组>>bookcase路由组 "/api/bookcase"
 	b := w.Group("/bookcase")

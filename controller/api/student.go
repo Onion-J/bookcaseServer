@@ -2,9 +2,9 @@ package api
 
 import (
 	"BookcaseServer/common"
+	"BookcaseServer/dto"
 	"BookcaseServer/model"
 	"BookcaseServer/response"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"sort"
 )
@@ -67,8 +67,8 @@ func CreateStudentAccount(c *gin.Context) {
 	response.Success(c, response.Created, nil)
 }
 
-// SelectStudent 查询学生账户
-func SelectStudent(c *gin.Context) {
+// SelectStudentAccount 查询学生账户
+func SelectStudentAccount(c *gin.Context) {
 	var studentData StudentData
 
 	// 参数绑定
@@ -86,23 +86,22 @@ func SelectStudent(c *gin.Context) {
 	db := common.GetDB()
 
 	// 查询
-
 	var students []model.Student
 	if len(studentData.StudentId) == 2 {
 		// 学院
-		db.Raw("SELECT * FROM students WHERE SUBSTRING(student_id, 3, 2) = ?", studentData.StudentId).Scan(&students)
+		db.Raw("SELECT * FROM students WHERE SUBSTRING(student_id, 4, 2) = ?", studentData.StudentId).Scan(&students)
 	} else if len(studentData.StudentId) == 3 {
 		// 年份
-		db.Raw("SELECT * FROM students WHERE SUBSTRING(student_id, 3) = ?", studentData.StudentId).Scan(&students)
+		db.Raw("SELECT * FROM students WHERE SUBSTRING(student_id, 1, 3) = ?", studentData.StudentId).Scan(&students)
 	} else if len(studentData.StudentId) == 4 {
 		// 专业
-		db.Raw("SELECT * FROM students WHERE SUBSTRING(student_id, 3,4) = ?", studentData.StudentId).Scan(&students)
+		db.Raw("SELECT * FROM students WHERE SUBSTRING(student_id, 4, 4) = ?", studentData.StudentId).Scan(&students)
 	} else if len(studentData.StudentId) == 5 {
 		// 年份 + 学院
-		db.Raw("SELECT * FROM students WHERE SUBSTRING(student_id, 5) = ?", studentData.StudentId).Scan(&students)
+		db.Raw("SELECT * FROM students WHERE SUBSTRING(student_id, 1, 5) = ?", studentData.StudentId).Scan(&students)
 	} else if len(studentData.StudentId) == 7 {
 		// 年份 + 专业
-		db.Raw("SELECT * FROM students WHERE SUBSTRING(student_id, 7) = ?", studentData.StudentId).Scan(&students)
+		db.Raw("SELECT * FROM students WHERE SUBSTRING(student_id, 1, 7) = ?", studentData.StudentId).Scan(&students)
 	} else if len(studentData.StudentId) == 12 {
 		db.Where("student_id = ?", studentData.StudentId).Find(&students)
 	} else {
@@ -110,5 +109,45 @@ func SelectStudent(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(len(students))
+	// 类型转换
+	var studentsDto = make([]dto.StudentDto, len(students))
+	for i, v := range students {
+		studentsDto[i] = dto.ToStudentDto(v)
+	}
+
+	// 返回结果
+	response.Success(c, response.Selected, gin.H{"students": studentsDto})
+
+}
+
+// DeleteStudentAccount 删除学生账户
+func DeleteStudentAccount(c *gin.Context) {
+	var studentData StudentData
+
+	// 参数绑定
+	if err := c.ShouldBind(&studentData); err != nil {
+		response.Failed(c, response.ParamError)
+		return
+	}
+
+	// 判断数据是否为空
+	if len(studentData.AccountList) == 0 {
+		response.Failed(c, response.DataError)
+		return
+	}
+
+	db := common.GetDB()
+
+	// 判断学生账户是否存在 不存在则跳过 存在则删除
+	for _, student := range studentData.AccountList {
+		if row := db.Where("student_id = ?", student.StudentId).First(&model.Student{}).RowsAffected; row != 0 {
+			if err := db.Delete(&student).Error; err != nil {
+				response.Failed(c, response.NotDeleted)
+				return
+			}
+		}
+	}
+
+	// 返回结果
+	response.Success(c, response.Deleted, nil)
 }
