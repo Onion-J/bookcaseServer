@@ -67,6 +67,7 @@ func init() {
 	var superAdmin model.User
 	var password = viper.GetString("superAdmin.password")
 
+	// 加密密码
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	superAdmin = model.User{
 		TeacherId:  viper.GetString("superAdmin.teacherId"),

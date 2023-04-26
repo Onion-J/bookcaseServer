@@ -64,10 +64,26 @@ func Start() {
 	u := w.Group("/user")
 	// 使用token中间件
 	u.Use(middleware.AuthMiddleware())
-	// 获取用户信息
+	// 获取登录用户信息
 	u.GET("/getUserInfo", api.GetUserInfo)
+	// 获取用户信息
+	u.GET("/getUserInfoList", api.GetUserInfoList)
+	// 更新手机号
+	u.POST("/updatePhone", api.UpdatePhone)
 	// 修改密码
 	u.POST("/changePassword", api.ChangePassword)
+	// 创建用户
+	u.POST("/createUser", middleware.PermissionMiddleware(), api.CreateUser)
+	// 设置管理员
+	u.POST("/setAdmin", middleware.PermissionMiddleware(), api.SetAdmin)
+	// 修改用户密码
+	u.POST("/resetPassword", middleware.PermissionMiddleware(), api.ResetPassword)
+	// 禁用账户
+	u.POST("/lockedAccount", middleware.PermissionMiddleware(), api.LockedAccount)
+	// 解禁账户
+	u.POST("/unlockedAccount", middleware.PermissionMiddleware(), api.UnlockedAccount)
+	// 删除账户
+	u.POST("/deleteAccount", middleware.PermissionMiddleware(), api.DeleteAccount)
 
 	// Web路由组>>student路由组 "/api/student"
 	s := w.Group("/student")
