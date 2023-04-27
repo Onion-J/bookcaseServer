@@ -43,17 +43,19 @@ func Start() {
 	// 小程序路由组
 	a := e.Group("/applet")
 	// 登录
-	a.POST("/login", applet.AppletLogin)
-	// 校验用户（完善个人信息）
-	a.POST("/verifyUser", applet.VerifyUser)
-	// 完善用户信息
-	a.POST("getUserInfo", applet.GetUserInfo)
+	a.POST("/login", applet.Login)
+	// 绑定学生账户
+	a.POST("/bindStudentAccount", applet.BindStudentAccount)
 	// 小程序轮播图
 	a.GET("/slid", applet.Slid)
+	// 获取储物柜信息
+	a.GET("/getBookcaseInfo", applet.GetBookcaseInfo)
 	// 申请
 	a.POST("/apply", applet.Apply)
 	// 申请情况
-	a.POST("/applicationRecords", applet.ApplicationRecords)
+	a.POST("/getApplicationRecords", applet.GetApplicationRecords)
+	// 取消申请
+	a.POST("/cancelApplication", applet.CancelApplication)
 
 	// Web路由组 "/api"
 	w := e.Group("/api")
@@ -102,17 +104,17 @@ func Start() {
 	b := w.Group("/bookcase")
 	// 使用token中间件
 	b.Use(middleware.AuthMiddleware())
-	// 获取图书柜情况
+	// 获取储物柜情况
 	b.GET("/getBookcaseInfo", api.GetBookcaseInfo)
-	// 创建图书柜
+	// 创建储物柜
 	b.POST("/createBookcase", api.CreateBookcase)
-	// 删除图书柜
+	// 删除储物柜
 	b.POST("/deleteBookcase", api.DeleteBookcase)
-	// 添加图书柜
+	// 添加储物柜
 	b.POST("/addBookcase", api.AddBookcase)
-	// 删减图书柜
+	// 删减储物柜
 	b.POST("/reduceBookcase", api.ReduceBookcase)
-	// 修改图书柜区域名称
+	// 修改储物柜区域名称
 	b.POST("/renameBookcase", api.RenameBookcase)
 
 	// Web路由组>>institute路由组 "/api/institute"

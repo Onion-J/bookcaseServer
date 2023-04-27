@@ -18,12 +18,12 @@ type BookcaseDeleteList struct {
 	DeleteList []Bookcases `json:"deleteList"`
 }
 
-// GetBookcaseInfo 获取图书柜情况
+// GetBookcaseInfo 获取储物柜情况
 func GetBookcaseInfo(c *gin.Context) {
 	var bookcaseList []model.Cabinet
 	db := common.GetDB()
 
-	// 查询图书柜信息
+	// 查询储物柜信息
 	if err := db.Find(&bookcaseList).Error; err != nil {
 		response.Failed(c, response.NotSelected)
 		return
@@ -39,7 +39,7 @@ func GetBookcaseInfo(c *gin.Context) {
 	response.Success(c, response.Selected, gin.H{"bookcaseList": bookcaseListDto})
 }
 
-// CreateBookcase 创建图书柜
+// CreateBookcase 创建储物柜
 func CreateBookcase(c *gin.Context) {
 	var bookcases Bookcases
 
@@ -63,7 +63,7 @@ func CreateBookcase(c *gin.Context) {
 		return
 	}
 
-	// 创建图书柜
+	// 创建储物柜
 	for i := 1; i <= bookcases.BookcaseNumber; i++ {
 		if err := db.Create(&model.Cabinet{
 			Area:           bookcases.AreaName,
@@ -79,7 +79,7 @@ func CreateBookcase(c *gin.Context) {
 	response.Success(c, response.Created, nil)
 }
 
-// DeleteBookcase 删除图书柜
+// DeleteBookcase 删除储物柜
 func DeleteBookcase(c *gin.Context) {
 
 	var bookcaseDeleteList BookcaseDeleteList
@@ -112,7 +112,7 @@ func DeleteBookcase(c *gin.Context) {
 			return
 		}
 
-		// 删除该区域下的所有图书柜
+		// 删除该区域下的所有储物柜
 		if err := db.Where("area = ?", deleteAreaList[i]).Delete(&model.Cabinet{}).Error; err != nil {
 			response.Failed(c, response.NotDeleted)
 			return
@@ -123,7 +123,7 @@ func DeleteBookcase(c *gin.Context) {
 	response.Success(c, response.Deleted, nil)
 }
 
-// AddBookcase 添加图书柜
+// AddBookcase 添加储物柜
 func AddBookcase(c *gin.Context) {
 	var bookcases Bookcases
 
@@ -149,7 +149,7 @@ func AddBookcase(c *gin.Context) {
 		return
 	}
 
-	// 添加图书柜
+	// 添加储物柜
 	for i := 1; i <= bookcases.BookcaseNumber; i++ {
 		if err := db.Create(&model.Cabinet{
 			Area:           bookcases.AreaName,
@@ -165,7 +165,7 @@ func AddBookcase(c *gin.Context) {
 	response.Success(c, response.Created, nil)
 }
 
-// ReduceBookcase 删减图书柜
+// ReduceBookcase 删减储物柜
 func ReduceBookcase(c *gin.Context) {
 	var bookcases Bookcases
 
@@ -191,7 +191,7 @@ func ReduceBookcase(c *gin.Context) {
 		return
 	}
 
-	// 删减图书柜
+	// 删减储物柜
 	for i := 0; i < bookcases.BookcaseNumber; i++ {
 		if err := db.Where("area = ? AND sequence_number = ?", bookcases.AreaName, int(row)-i).Delete(&model.Cabinet{}).Error; err != nil {
 			response.Failed(c, response.NotDeleted)
@@ -203,7 +203,7 @@ func ReduceBookcase(c *gin.Context) {
 	response.Success(c, response.Deleted, nil)
 }
 
-// RenameBookcase 修改图书柜区域名
+// RenameBookcase 修改储物柜区域名
 func RenameBookcase(c *gin.Context) {
 	var bookcases Bookcases
 
