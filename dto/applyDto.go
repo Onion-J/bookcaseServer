@@ -13,6 +13,7 @@ type ApplyDto struct {
 	SequenceNumber int       `json:"sequenceNumber"`
 	StartDate      string    `json:"startDate"`
 	EndDate        string    `json:"endDate"`
+	CreateAt       string    `json:"createAt"`
 }
 
 func ToApplyDto(apply model.Apply) ApplyDto {
@@ -24,5 +25,6 @@ func ToApplyDto(apply model.Apply) ApplyDto {
 		SequenceNumber: apply.SequenceNumber,
 		StartDate:      apply.StartDate,
 		EndDate:        apply.EndDate,
+		CreateAt:       apply.CreatedAt.String(),
 	}
 }

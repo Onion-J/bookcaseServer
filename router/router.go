@@ -117,6 +117,17 @@ func Start() {
 	// 修改储物柜区域名称
 	b.POST("/renameBookcase", api.RenameBookcase)
 
+	// Web路由组>>application路由组 "/api/application"
+	p := w.Group("/application")
+	// 获取今天的申请记录
+	p.GET("/getTodayApplication", api.GetTodayApplication)
+	// 获取没过期的申请记录
+	p.GET("/getNotExpiredApplication", api.GetNotExpiredApplication)
+	// 获取储物柜的使用记录
+	p.POST("/getUsageRecords", api.GetUsageRecords)
+	// 获取昨天的申请总数
+	p.GET("/getYesterdayNumber", api.GetYesterdayNumber)
+
 	// Web路由组>>institute路由组 "/api/institute"
 	i := w.Group("/institute")
 	// 使用token中间件

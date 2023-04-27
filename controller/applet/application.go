@@ -23,6 +23,12 @@ func Apply(c *gin.Context) {
 		return
 	}
 
+	// 判断数据是否为空
+	if apply.StudentId == "" || apply.Name == "" || apply.Area == "" || apply.SequenceNumber == 0 || apply.StartDate == "" || apply.EndDate == "" {
+		response.Failed(c, response.DataError)
+		return
+	}
+
 	apply.StartDate += " 00:00:00"
 	apply.EndDate += " 23:59:59"
 
