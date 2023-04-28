@@ -9,15 +9,21 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Slid 轮播图
-func Slid(c *gin.Context) {
+// Slide 轮播图
+func Slide(c *gin.Context) {
+
 	realmName := viper.GetString("server.realmName")
 	port := ":" + viper.GetString("server.port")
-	img1 := realmName + port + viper.GetString("slid.img1")
-	img2 := realmName + port + viper.GetString("slid.img2")
-	img3 := realmName + port + viper.GetString("slid.img3")
-	imgURL := []string{img1, img2, img3}
-	response.Success(c, response.SendSuccess, gin.H{"imgURL": imgURL})
+	baseUrl := viper.GetString("slid.baseUrl")
+
+	fileList := common.FileForEach("." + baseUrl)
+
+	imgUrlList := make([]string, len(fileList))
+	for i, file := range fileList {
+		imgUrlList[i] = realmName + port + baseUrl + file.Name()
+	}
+
+	response.Success(c, response.SendSuccess, gin.H{"imgURL": imgUrlList})
 }
 
 // GetBookcaseInfo 获取储物柜信息

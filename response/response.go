@@ -10,6 +10,9 @@ const (
 	ParamInvalid = "请求参数无效!"
 	ParamError   = "参数错误!"
 
+	UploadSuccess = "上传成功!"
+	UploadFailed  = "上传失败!"
+
 	ApplySuccess = "申请成功!"
 	ApplyFailed  = "申请失败!"
 

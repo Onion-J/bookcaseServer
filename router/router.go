@@ -47,7 +47,7 @@ func Start() {
 	// 绑定学生账户
 	a.POST("/bindStudentAccount", applet.BindStudentAccount)
 	// 小程序轮播图
-	a.GET("/slid", applet.Slid)
+	a.GET("/slide", applet.Slide)
 	// 获取储物柜信息
 	a.GET("/getBookcaseInfo", applet.GetBookcaseInfo)
 	// 申请
@@ -61,6 +61,12 @@ func Start() {
 	w := e.Group("/api")
 	// 登录
 	w.POST("/login", api.Login)
+	// 获取轮播图
+	w.GET("/getSlide", middleware.AuthMiddleware(), api.GetSlide)
+	// 上传图片
+	w.POST("/uploadImg", middleware.AuthMiddleware(), api.UploadImg)
+	// 删除图片
+	w.POST("/deleteImg", middleware.AuthMiddleware(), api.DeleteImg)
 
 	// Web路由组>>user路由组 "/api/user"
 	u := w.Group("/user")

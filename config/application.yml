@@ -18,6 +18,4 @@ applet:
   appID: wxea179169274cc790
   appSecret: 6a9c4459bad553a84fd215e5d5c753c1
 slid:
-  img1: /resource/image/slid/bg1.png
-  img2: /resource/image/slid/bg1.png
-  img3: /resource/image/slid/bg1.png
+  baseUrl: /resource/image/slid/
